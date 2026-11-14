@@ -9,57 +9,57 @@
 
 #include <stdint.h>
 
-//Include STM libs
-#include "stm32f446xx.h"
-#include "stm32f446xx_gpio_driver.h"
+#include "wheel_control.h"
 
-//Initialize GPIO
-void gpio_init_wheel_controller(){
+//BOOL
+#define TRUE				1
+#define FALSE				0
 
-    GPIO_Handle_t wheel_pins;
-
-    //Set Pin port D
-    wheel_pins.pGPIOx	= GPIOD;
-
-    //Configure STBY pin (D3)
-    wheel_pins.GPIO_PinConfig.GPIO_PinNumber		= GPIO_PIN_NO_3;
-    wheel_pins.GPIO_PinConfig.GPIO_PinMode			= GPIO_MODE_OUT;
-    wheel_pins.GPIO_PinConfig.GPIO_PinSpeed			= GPIO_SPEED_LOW;
-    wheel_pins.GPIO_PinConfig.GPIO_PinPuPdControl	= GPIO_PIN_PU;
-    wheel_pins.GPIO_PinConfig.GPIO_PinOPType		= GPIO_OP_TYPE_OD;
-    wheel_pins.GPIO_PinConfig.GPIO_PinAltFunMode	= GPIO_MODE_OUT;
-
-    GPIO_Init(&wheel_pins);
-
-
-    //Configure PWMA pin (D5)
-    wheel_pins.GPIO_PinConfig.GPIO_PinNumber		= GPIO_PIN_NO_5;
-
-    GPIO_Init(&wheel_pins);
-
-
-    //Configure PWMB pin (D6)
-    wheel_pins.GPIO_PinConfig.GPIO_PinNumber		= GPIO_PIN_NO_6;
-
-    GPIO_Init(&wheel_pins);
-
-
-    //Configure AIN1 pin (D7)
-    wheel_pins.GPIO_PinConfig.GPIO_PinNumber		= GPIO_PIN_NO_7;
-
-    GPIO_Init(&wheel_pins);
-
-
-    //Configure BIN1 pin (D8)
-    wheel_pins.GPIO_PinConfig.GPIO_PinNumber		= GPIO_PIN_NO_8;
-
-    GPIO_Init(&wheel_pins);
+//Delay function
+void delay(){
+	int i;
+	for(i = 0; i < 5000000/2; i++){
+		//
+	}
 }
+
 
 int main(void)
 {
+	//Init peripherals
+	wheel_init();
+
+	//Initialize
+	//int run	= FALSE;
+	int run	= TRUE;
+
+	wheel_run(STANDBY, RIGHT_WHEEL,RIGHT_WHEEL_SPEED);
+
+
+	//Test wheels
     /* Loop forever */
-	while(1){
-		//
+	while(run){
+
+		wheel_run(FORWARD, RIGHT_WHEEL, RIGHT_WHEEL_SPEED);
+
+		delay();
+
+
+		wheel_run(STOP, RIGHT_WHEEL, RIGHT_WHEEL_SPEED);
+
+		delay();
+
+		wheel_run(FORWARD, LEFT_WHEEL, LEFT_WHEEL_SPEED);
+		//wheel_run(BACK, RIGHT_WHEEL, RIGHT_WHEEL_SPEED);
+
+		delay();
+
+
+		wheel_run(STOP, LEFT_WHEEL, LEFT_WHEEL_SPEED);
+		//wheel_run(STOP, RIGHT_WHEEL, RIGHT_WHEEL_SPEED);
+
+		delay();
+
+		//run = FALSE;
 	}
 }
